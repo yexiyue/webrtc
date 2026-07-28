@@ -17,7 +17,16 @@ runtime-tokio = ["dep:tokio", "dep:quinn-udp"]
 runtime-smol = ["dep:smol", "dep:async-broadcast", "dep:quinn-udp"]
 
 [dependencies]
-rtc = { version = "0.20.0-rc.4", path = "rtc" }
+# SwarmDrop 集成分支专用改动：去掉 `path = "rtc"`。
+#
+# 上游用 path 指向 rtc submodule。但本仓是被下游经 `[patch.crates-io]` 拉进去用的，
+# 而 patch **不作用于 path 依赖**——path 一旦保留，webrtc 的 rtc 来自 submodule、
+# 下游自己的 rtc 来自 patch，两个 source id 不同 = 两个互不兼容的同名 crate，
+# `webrtc` 返回的 rtc 类型对不上下游 `use rtc::...` 的类型，直接编译失败。
+#
+# 去掉 path 后它从 crates.io 解析，于是和下游一起被同一条 patch 命中，收敛成一个实例。
+# **这行不要带进任何上游 PR。**
+rtc = { version = "0.20.0-rc.4" }
 
 bytes = "1.12.0"
 async-trait = "0.1.89"
