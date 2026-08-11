@@ -30,7 +30,10 @@ crypto-ring = ["rtc/crypto-ring"]
 crypto-aws-lc-rs = ["rtc/crypto-aws-lc-rs"]
 
 [dependencies]
-rtc = { version = "0.21.0-alpha.1", path = "rtc", default-features = false }
+# SwarmDrop 集成分支专用适配，**不要投上游**。
+# 去掉 `path = "rtc"`：`[patch.crates-io]` 不作用于 path 依赖，留着它下游就无法
+# 让本 crate 与自己的 `rtc` 解析到同一份，两个 source id = 两套同名类型，编译失败。
+rtc = { version = "0.21.0-alpha.1", default-features = false }
 
 bytes = "1.12.0"
 async-trait = "0.1.89"
